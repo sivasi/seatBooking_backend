@@ -1,11 +1,9 @@
-const pool = require('../config/db');
+const client = require('../config/db');
 
 const bookTicket = async (req, res) => {
   const { bookedSeats} = req.body;
 
   console.log('booking tickets...');
-  
-  const client = await pool.connect();
 
     try {
       await client.query('BEGIN'); // Start transaction
@@ -24,7 +22,7 @@ const bookTicket = async (req, res) => {
 
   } catch (error) {
     // Rollback the transaction in case of an error
-    await pool.query('ROLLBACK');
+    await client.query('ROLLBACK');
     
     console.error('Error booking tickets:', error);
     res.status(500).json({ error: 'Booking failed' });
@@ -34,7 +32,7 @@ const bookTicket = async (req, res) => {
 const getSeat = async (req, res) => {
   console.log('Fetching all seats...');
   try {
-    const result = await pool.query('SELECT seat_number, status FROM seats');
+    const result = await client.query('SELECT seat_number, status FROM seats');
 
     console.log('Seat fetched and returned');
     
@@ -49,7 +47,7 @@ const getSeat = async (req, res) => {
 const resetSeat = async (req, res) => {
   console.log('resetting seat..');
   try{
-    await pool.query("UPDATE seats SET status = 'available', user_id = NULL");
+    await client.query("UPDATE seats SET status = 'available', user_id = NULL");
 
     console.log('reset the seat');
     res.status(200).json({message: 'Reset seat successful'});
