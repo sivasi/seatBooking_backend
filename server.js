@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow the frontend origin
+  origin: 'https://seat-booking-frontend-three.vercel.app', // Allow the frontend origin
   credentials: true, // Allow credentials (cookies, HTTP authentication)
 };
 
